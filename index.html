@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="tl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Phobia Bot">
+<meta name="theme-color" content="#0b0610">
+<title>🎃 Phobia Bot · Halloween</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0610;--panel:#170d1f;--panel2:#1f1229;--line:#3a1f4a;--line2:#4f2a63;
+  --text:#fff1e6;--mut:#b9a3c9;
+  --gold:#ff8a1f;--ok:#7dff4f;--bad:#ff7a93;--accent:#8a2be2;--violet:#c58bff;
+  --r-lg:30px;--r-md:20px;--r-sm:13px;
+  --glass:rgba(23,13,31,.66);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:76px;color-scheme:dark}
+body{
+  margin:0;min-height:100vh;color:var(--text);background:var(--ink);
+  font:15px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+/* langit: aurora + bituin (nasa likod ng lahat) */
+body::before,body::after{content:"";position:fixed;pointer-events:none;z-index:0}
+body::before{
+  inset:-10%;
+  background:
+    radial-gradient(60% 38% at 12% 0%,rgba(138,43,226,.34),transparent 70%),
+    radial-gradient(46% 32% at 100% 18%,rgba(125,255,79,.11),transparent 70%),
+    radial-gradient(60% 40% at 50% 112%,rgba(255,138,31,.11),transparent 70%);
+  animation:drift 28s ease-in-out infinite alternate;
+}
+body::after{
+  inset:0;
+  background-image:
+    radial-gradient(1.2px 1.2px at 20px 30px,rgba(255,255,255,.7) 50%,transparent 51%),
+    radial-gradient(1px 1px at 120px 80px,rgba(255,255,255,.5) 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 210px 150px,rgba(255,138,31,.75) 50%,transparent 51%),
+    radial-gradient(1px 1px at 70px 190px,rgba(255,255,255,.45) 50%,transparent 51%),
+    radial-gradient(1px 1px at 260px 40px,rgba(197,139,255,.65) 50%,transparent 51%);
+  background-size:300px 240px;
+  animation:twinkle 7s ease-in-out infinite alternate;
+}
+@keyframes drift{from{transform:translate3d(-2%,0,0) scale(1)}to{transform:translate3d(2%,2%,0) scale(1.08)}}
+@keyframes twinkle{from{opacity:.5}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{from{box-shadow:0 0 36px rgba(255,138,31,.4),0 0 90px rgba(255,138,31,.12)}to{box-shadow:0 0 56px rgba(255,138,31,.62),0 0 120px rgba(255,138,31,.2)}}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(125,255,79,.55)}100%{box-shadow:0 0 0 9px rgba(125,255,79,0)}}
+
+.wrap{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px calc(60px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:8px 2px 16px}
+.brand{
+  font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1;
+  background:linear-gradient(95deg,#fff 10%,var(--gold) 58%,var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.brand::before{content:"✦ ";-webkit-text-fill-color:var(--gold);font-size:.62em;vertical-align:.28em}
+.brand small{display:block;font-size:13px;font-weight:400;letter-spacing:0;margin-top:8px;-webkit-text-fill-color:var(--mut)}
+.pill{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:13px;font-weight:600;white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--bad)}
+.pill.on{border-color:rgba(125,255,79,.35)}
+.pill.on i{background:var(--ok);animation:ping 2s ease-out infinite}
+
+/* tabs */
+nav{position:sticky;top:0;z-index:5;margin:0 -16px 18px;padding:max(10px,env(safe-area-inset-top)) 16px 10px;background:rgba(11,6,16,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{width:auto;margin:0;flex:none;padding:9px 16px;border-radius:99px;border:1px solid transparent;background:transparent;color:var(--mut);font-weight:600;font-size:14px}
+nav button:hover{color:var(--text)}
+nav button[aria-selected="true"]{color:var(--text);border-color:rgba(255,138,31,.35);background:linear-gradient(135deg,rgba(138,43,226,.42),rgba(255,138,31,.14))}
+
+/* hero: ang buwan ang bida */
+.hero{
+  display:grid;grid-template-columns:auto 1fr;gap:20px 26px;align-items:center;padding:24px;
+  border:1px solid transparent;border-radius:var(--r-lg);
+  background:
+    linear-gradient(180deg,rgba(23,27,59,.92),rgba(23,13,31,.92)) padding-box,
+    linear-gradient(135deg,rgba(255,138,31,.55),rgba(138,43,226,.5) 50%,rgba(125,255,79,.35)) border-box;
+  box-shadow:0 24px 60px -24px rgba(138,43,226,.5);
+}
+.moon{position:relative;width:88px;height:88px;border-radius:50%;flex:none;transition:all .5s}
+.moon::after{content:"";position:absolute;inset:-13px;border-radius:50%;border:1px dashed rgba(154,160,207,.35);animation:spin 40s linear infinite}
+.moon.full{
+  background:
+    radial-gradient(circle at 62% 64%,rgba(170,115,30,.32) 0 9%,transparent 10%),
+    radial-gradient(circle at 30% 70%,rgba(170,115,30,.26) 0 6%,transparent 7%),
+    radial-gradient(circle at 70% 28%,rgba(170,115,30,.2) 0 5%,transparent 6%),
+    radial-gradient(circle at 35% 30%,#ffe2c2,var(--gold) 55%,#e06a00);
+  animation:glow 4.5s ease-in-out infinite alternate;
+}
+.moon.full::after{border-color:rgba(255,138,31,.45)}
+.moon.crescent{background:transparent;box-shadow:inset -23px 9px 0 0 var(--gold),0 0 34px rgba(255,138,31,.28)}
+.moon.new{background:transparent;border:2px solid var(--mut)}
+.moon.off{background:transparent;border:2px dashed var(--bad);box-shadow:0 0 26px rgba(255,122,147,.22)}
+.moon.off::after{border-color:rgba(255,122,147,.3);animation-duration:90s}
+.hero h1{margin:0;font-size:26px;font-weight:800;line-height:1.12;letter-spacing:-.02em}
+.hero p{margin:7px 0 0;color:var(--mut)}
+.stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{padding:13px 15px;border:1px solid var(--line);border-radius:var(--r-sm);background:rgba(11,6,16,.5)}
+.stat .m{display:block;margin-bottom:2px}
+.v{font-size:17px;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.actions{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.actions button{margin-top:0}
+
+/* panels */
+.c{position:relative;border:1px solid var(--line);border-radius:var(--r-md);background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:20px;margin:14px 0;box-shadow:0 14px 34px -22px rgba(0,0,0,.8)}
+.c::before{content:"";position:absolute;left:20px;right:20px;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,138,31,.45),transparent)}
+.c h2{margin:0;font-size:18px;font-weight:800;letter-spacing:-.015em;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.c>.m:first-of-type,.c h2+.m{margin-top:5px}
+.m{color:var(--mut);font-size:13px}
+.m b{color:var(--text);font-weight:600}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--gold)}
+
+/* controls */
+button,select,input,textarea{width:100%;padding:12px 14px;border-radius:var(--r-sm);border:1px solid var(--line);background:rgba(11,6,16,.7);color:var(--text);font:inherit;margin-top:10px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(197,139,255,.18);outline:0}
+textarea{resize:vertical;line-height:1.45}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+button{font-weight:700;cursor:pointer;transition:transform .12s,filter .12s,box-shadow .2s}
+button:hover{filter:brightness(1.1)}button:active{transform:scale(.97)}
+.go{background:linear-gradient(135deg,#a8ff7a,#5fd12f);border-color:transparent;color:#0f2406;box-shadow:0 8px 22px -10px rgba(125,255,79,.7)}
+.stop{background:linear-gradient(135deg,#ff93a8,#f0627f);border-color:transparent;color:#3a0f1b;box-shadow:0 8px 22px -10px rgba(255,122,147,.7)}
+.acc{background:linear-gradient(135deg,#a64bf0,#6a1fb8);border-color:transparent;color:#fff;box-shadow:0 8px 22px -10px rgba(138,43,226,.9)}
+.ghost{background:rgba(255,255,255,.03);border-color:var(--line2)}
+label{display:block;margin-top:14px;font-size:13px;color:var(--mut)}
+label input,label select,label textarea{margin-top:6px;color:var(--text)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+input[type=checkbox]{appearance:none;-webkit-appearance:none;position:relative;flex:none;width:22px;height:22px;padding:0;margin:0;border-radius:7px;border:1.5px solid var(--line2);background:rgba(11,6,16,.7)}
+input[type=checkbox]:checked{background:var(--ok);border-color:transparent}
+input[type=checkbox]:checked::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #0f2406;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+
+/* switch row */
+.row{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.sw{width:60px;height:34px;margin:0;padding:0;border-radius:99px;position:relative;background:rgba(11,6,16,.8);flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:var(--mut);box-shadow:0 2px 6px rgba(0,0,0,.45);transition:all .22s}
+.sw[aria-checked="true"]{background:linear-gradient(135deg,#a8ff7a,#5fd12f);border-color:transparent;box-shadow:0 0 20px rgba(125,255,79,.35)}
+.sw[aria-checked="true"]::after{left:29px;background:#0f2406}
+
+/* GC list */
+.gclist{margin-top:12px;display:grid;gap:8px}
+.gcrow{display:flex;gap:12px;align-items:center;margin:0;padding:13px 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:rgba(11,6,16,.55);color:var(--text);font-size:14px}
+.gcrow:has(input:checked){border-color:rgba(125,255,79,.4);background:rgba(125,255,79,.07)}
+.gcrow span{overflow:hidden;text-overflow:ellipsis}
+
+/* group features (lock gc name / set all nicknames) */
+.gfrow{display:flex;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:rgba(11,6,16,.55)}
+.gfrow.picked{border-color:rgba(255,138,31,.55)}
+.gfrow .nm{flex:1;min-width:0;cursor:pointer}
+.gfrow .nm b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gfrow button{width:84px;margin:0;padding:10px 12px}
+details.more{margin-top:14px}
+details.more summary{cursor:pointer;color:var(--gold);font-weight:700;font-size:14px}
+
+/* alerts */
+.banner{display:none;border:1px solid var(--bad);background:rgba(255,122,147,.1);color:#ffc6d1;border-radius:var(--r-md);padding:14px 16px;margin:0 0 14px}
+.banner.soft{border-color:var(--gold);background:rgba(255,138,31,.09);color:#ffd1a0}
+
+/* activity */
+#log{margin-top:8px}
+.ev{display:grid;grid-template-columns:72px 1fr;gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:13px}
+.ev:first-child{border-top:0}
+.ev time{color:var(--mut);font-variant-numeric:tabular-nums}
+.ev b{font-weight:700}
+.ev.error b{color:var(--bad)}.ev.cmd b{color:var(--ok)}.ev.system b{color:var(--gold)}
+.errbox{margin-top:8px;color:var(--bad);font-size:13px}
+
+/* commands */
+.cmds{display:grid;gap:18px}
+.cmds h3{margin:0 0 8px;font-size:14px;font-weight:800;color:var(--gold)}
+.cmds code{display:block;padding:8px 11px;margin-top:5px;border-radius:10px;background:rgba(11,6,16,.55);font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;color:var(--text);overflow-wrap:anywhere}
+.cmds code span{color:var(--mut)}
+
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;background:rgba(23,27,59,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line2);padding:12px 20px;border-radius:99px;font-weight:600;box-shadow:0 14px 34px -10px rgba(0,0,0,.7);transition:all .25s;z-index:9;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.err{border-color:var(--bad);color:#ffc6d1}
+
+[hidden]{display:none!important}
+@media(min-width:720px){.v{font-size:20px}.stats{grid-template-columns:repeat(4,1fr)}.actions{grid-template-columns:repeat(4,1fr)}.hero{padding:30px}.moon{width:108px;height:108px}.moon.crescent{box-shadow:inset -29px 11px 0 0 var(--gold),0 0 34px rgba(255,138,31,.28)}.hero h1{font-size:30px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* 🎃 Halloween: lumulutang na multo at kalabasa */
+.hw{position:fixed;z-index:0;pointer-events:none;font-size:34px;opacity:.16;animation:floaty 9s ease-in-out infinite alternate}
+.hw:nth-of-type(2){animation-duration:12s;animation-delay:-3s}
+.hw:nth-of-type(3){animation-duration:15s;animation-delay:-6s}
+@keyframes floaty{from{transform:translateY(0) rotate(-6deg)}to{transform:translateY(-26px) rotate(6deg)}}
+</style>
+</head>
+<body>
+<span class="hw" style="top:14%;left:6%">👻</span><span class="hw" style="top:46%;right:5%">🎃</span><span class="hw" style="top:76%;left:10%">🦇</span>
+<div class="wrap">
+<header>
+  <div class="brand">🎃 Phobia Bot <small><span id="ownt">Personal bot ng owner</span> · <span id="lib">–</span></small></div>
+  <div class="pill" id="conn"><i></i><span id="connt">Offline</span></div>
+</header>
+
+<nav role="tablist" aria-label="Mga seksyon">
+  <button role="tab" data-tab="home" aria-selected="true">Home</button>
+  <button role="tab" data-tab="chats" aria-selected="false">Mga GC</button>
+  <button role="tab" data-tab="settings" aria-selected="false">Settings</button>
+  <button role="tab" data-tab="session" aria-selected="false">Session</button>
+  <button role="tab" data-tab="activity" aria-selected="false">Activity</button>
+  <button role="tab" data-tab="cmds" aria-selected="false">Commands</button>
+</nav>
+
+<div class="banner" id="dead"><b>Patay na ang session.</b> Nag-pause ang auto-retry para hindi ma-flag ang account. Mag-paste ng bagong cookie sa Session tab.</div>
+
+<div class="banner soft" id="off"><b>Offline ka o hindi maabot ang server.</b> <span id="offt"></span> Hindi gagana ang mga button hanggang bumalik ang koneksyon. Kusa itong mag-re-refresh.</div>
+
+<!-- HOME -->
+<section id="tab-home" role="tabpanel">
+  <div class="hero">
+    <div class="moon off" id="moon" aria-hidden="true"></div>
+    <div>
+      <h1 id="state">Kumokonekta…</h1>
+      <p id="statesub">Hinihintay ang status ng bot.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="m">Messenger</span><span class="v" id="on">–</span></div>
+      <div class="stat"><span class="m">Bot</span><span class="v" id="run">–</span></div>
+      <div class="stat"><span class="m">Server uptime</span><span class="v" id="su">–</span></div>
+      <div class="stat"><span class="m">Bot uptime</span><span class="v" id="bu">–</span></div>
+    </div>
+    <div class="actions">
+      <button class="go" onclick="post('start')">▶ Start</button>
+      <button class="stop" onclick="post('stop')">■ Stop</button>
+      <button class="ghost" onclick="post('reconnect')">Reconnect</button>
+      <button class="ghost" onclick="post('disconnect')">Disconnect</button>
+    </div>
+  </div>
+
+  <div class="c">
+    <div class="row">
+      <div>
+        <h2>Auto reply sa lahat ng chat</h2>
+        <div class="m" id="st">–</div>
+      </div>
+      <button class="sw" id="autosw" role="switch" aria-checked="false" aria-label="Auto reply" onclick="post('auto',{on:!S.autoReply})"></button>
+    </div>
+  </div>
+
+  <div class="c"><h2>Kalusugan ng session</h2><div class="m" id="health" style="line-height:1.8"></div></div>
+
+  <div class="c" id="installcard" hidden>
+    <h2>I-install bilang app</h2>
+    <div class="m" id="installtxt">Gawing app sa phone o computer. Mabubuksan ito kahit offline at makikita ang huling status.</div>
+    <button class="acc" id="installbtn" onclick="installApp()" hidden>Install app</button>
+  </div>
+</section>
+
+<!-- CHATS -->
+<section id="tab-chats" role="tabpanel" hidden>
+  <div class="c">
+    <h2>Mga group chat</h2>
+    <div class="m">I-tick ang mga GC na gusto mong sagutin ng bot. <b>Sa naka-tick lang ito magcha-chat.</b> Puwede mo ring i-ON/OFF sa mismong GC gamit ang <b>!on</b> / <b>!off</b> (admin). Kapag nag-restart ang server, kusa itong magre-resume.</div>
+    <div id="gclist" class="gclist m">Pindutin ang Refresh list…</div>
+    <button class="ghost" onclick="threads()">Refresh list</button>
+  </div>
+
+  <div class="c">
+    <h2>Private message (PM) targets</h2>
+    <div class="m">I-tick ang tao na gusto mong rereplyan ng bot sa <b>PM</b>. Kapag nag-message siya sa bot account, sasagot ito ng troll replies tulad sa GC (kapareho ng lazy skip, limits, at typing). <b>Sa naka-tick lang.</b> Hindi pa nag-PM? Ilagay ang Facebook user ID sa ibaba.</div>
+    <div id="dmlist" class="gclist m">Pindutin ang Refresh list…</div>
+    <label>Add by Facebook user ID<input id="dm_id" type="text" inputmode="numeric" placeholder="1000xxxxxxxxxxx"></label>
+    <div class="g"><button class="go" onclick="dmAdd()">+ Add target</button><button class="ghost" onclick="dms()">Refresh list</button></div>
+  </div>
+
+  <div class="c">
+    <h2>GC name cycle <span id="gcon"></span></h2>
+    <div class="m">Iikot ang pangalan ng napiling GC hanggang i-Stop mo. Chat command: <b>!gcname start</b> / <b>stop</b>.</div>
+    <label>Mga pangalan (isa kada linya)<textarea id="gc_names" rows="5"></textarea></label>
+    <label>Interval (segundo, min 10)<input id="gc_int" type="number" min="10" max="3600"></label>
+    <div class="m" id="gcst" style="margin-top:10px"></div>
+    <div class="g"><button class="go" onclick="gcStart()">▶ Start cycle</button><button class="stop" onclick="post('gcstop')">■ Stop cycle</button></div>
+    <button class="ghost" onclick="gcSave()">Save names</button>
+  </div>
+
+  <div class="c">
+    <h2>Group features</h2>
+    <div class="m">Dito na lang ginagawa ang <b>Lock GC name</b> at <b>Set ALL nicknames</b>. I-type ang gusto mong ilagay, tapos pindutin ang <b>Start</b> sa GC.</div>
+    <label>Feature<select id="gft" onchange="gfUI()"><option value="lock">Lock GC name</option><option value="nick">Set ALL nicknames</option></select></label>
+    <input id="gf1" type="text" autocomplete="off">
+    <div class="m" id="gfhint" style="margin-top:8px"></div>
+    <input id="gfind" type="search" placeholder="Hanapin ang GC…" oninput="gRender()">
+    <div id="gflist" class="gclist m">Pindutin ang Refresh list…</div>
+    <button class="ghost" onclick="gLoad()">Refresh list</button>
+
+    <details class="more">
+      <summary>More tools (pindutin muna ang pangalan ng GC)</summary>
+      <div class="m" id="gmore" style="margin-top:8px">Wala pang napiling GC</div>
+      <div class="g"><button class="ghost" onclick="gAct('gcname-set',{name:gv('gf1')})">Set GC name once</button><button class="ghost" onclick="gAct('nick-clearall')">Clear ALL nicknames</button></div>
+      <div class="g"><button class="go" onclick="gAct('nick-lock')">Lock nicknames</button><button class="ghost" onclick="gAct('nick-unlock')">Unlock nicknames</button></div>
+    </details>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="tab-settings" role="tabpanel" hidden>
+  <div class="c">
+    <h2>Branding ng owner</h2>
+    <div class="m">Lalabas sa itaas ng dashboard at sa pamagat ng tab. Naka-save lang sa device na ito.</div>
+    <label>Pangalan ng owner<input id="own_name" type="text" maxlength="30" placeholder="hal. Juan"></label>
+    <button class="acc" onclick="saveOwner()">Save pangalan</button>
+  </div>
+
+  <div class="c">
+    <h2>Reply settings</h2>
+    <label>Bilis ng reply<select id="s_speed"><option value="fast">Fast (~1-3s)</option><option value="normal">Normal (~3-6s)</option><option value="slow">Slow (~5-9s)</option></select></label>
+    <div class="g"><label>Self react<select id="s_self"><option value="1">ON</option><option value="0">OFF</option></select></label>
+    <label>Self react chance (0-1)<input id="s_selfrate" type="number" step="0.05" min="0" max="1"></label></div>
+    <label>Max skip na sunod-sunod (0-4). 0 = sasagot sa lahat<input id="s_skip" type="number" step="1" min="0" max="4"></label>
+    <div class="g"><label>Max replies / oras (0 = walang limit)<input id="s_hour" type="number" min="0" max="1000000"></label><label>Max replies / araw (0 = walang limit)<input id="s_day" type="number" min="0" max="10000000"></label></div>
+    <div class="g"><label>Troll replies (random asar)<select id="s_troll"><option value="1">ON</option><option value="0">OFF</option></select></label>
+    <label>Mark as seen<select id="s_read"><option value="1">ON</option><option value="0">OFF</option></select></label></div>
+    <label>Quiet hours (walang reply)<select id="s_q"><option value="0">OFF</option><option value="1">ON</option></select></label>
+    <div class="g"><label>Start<input id="s_qs" type="time"></label><label>End<input id="s_qe" type="time"></label></div>
+    <div class="m" id="tz" style="margin-top:10px"></div>
+    <button class="acc" onclick="saveSettings()">Save settings</button>
+  </div>
+
+  <div class="c">
+    <h2>Mga admin</h2>
+    <div class="m">Mga Facebook ID na puwedeng gumamit ng admin commands (<b>!gcname</b>, <b>!troll</b>, <b>!eco</b>) sa chat. Laging admin ang mismong bot account. Isang ID kada linya, o paghiwalayin ng comma.</div>
+    <div class="m" style="margin-top:6px">Para sa owner commands (<b>!setbal</b>, <b>!additem</b>), mag-set ng <b>OWNER_IDS</b> sa Railway Variables.</div>
+    <textarea id="admins" rows="3" placeholder="61596019734288"></textarea>
+    <div class="m" id="adminst" style="margin-top:8px"></div>
+    <button class="acc" onclick="post('admins',{ids:$('admins').value}).then(()=>{adminsFilled=false})">Save admins</button>
+  </div>
+</section>
+
+<!-- SESSION -->
+<section id="tab-session" role="tabpanel" hidden>
+  <div class="c">
+    <h2>Facebook session</h2>
+    <div class="m" id="ss"></div>
+    <textarea id="ck" rows="5" placeholder="Paste cookie / appstate (JSON array o c_user=...; xs=...)"></textarea>
+    <button class="acc" onclick="post('session',{cookie:$('ck').value}).then(()=>$('ck').value='')">Save &amp; connect</button>
+  </div>
+</section>
+
+<!-- ACTIVITY -->
+<section id="tab-activity" role="tabpanel" hidden>
+  <div class="c">
+    <h2>Activity</h2>
+    <div class="errbox" id="err"></div>
+    <div id="log"></div>
+  </div>
+</section>
+
+<!-- COMMANDS -->
+<section id="tab-cmds" role="tabpanel" hidden>
+  <div class="c"><h2>Chat commands</h2><div class="m">Prefix: <b id="pfx">!</b>. Ang mga may 🔒 ay para sa admin o owner lang.</div></div>
+  <div class="c cmds" id="cmdlist"></div>
+</section>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+let S={},K=localStorage.k||"",filled=false;
+const $=i=>document.getElementById(i);
+function applyOwner(){const n=(localStorage.owner||'').trim();
+ $('ownt').textContent=n?'Personal bot ni '+n:'Personal bot ng owner';
+ document.title=n?n+' · 🎃 Phobia':'🎃 Phobia Bot · Halloween'}
+function saveOwner(){try{localStorage.owner=$('own_name').value.trim()}catch{}applyOwner();toast('Na-save ang pangalan ✓')}
+$('own_name').value=localStorage.owner||'';applyOwner();
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+(async()=>{let n;
+ try{n=await (await fetch('/api/needsetup')).json();localStorage.open=n.open?'1':'0'}catch{n={open:localStorage.open==='1'}}
+ if(!n.open&&!K&&navigator.onLine)K=localStorage.k=prompt("Dashboard password")||"";
+ load();setTimeout(threads,1200);setTimeout(dms,1300);setTimeout(gfUI,1400);setTimeout(gLoad,1600)})();
+
+/* ---------- tabs ---------- */
+const tabs=[...document.querySelectorAll('nav button')];
+function openTab(name){
+  if(!$('tab-'+name))name='home';
+  tabs.forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===name)));
+  document.querySelectorAll('[role=tabpanel]').forEach(p=>p.hidden=p.id!=='tab-'+name);
+  history.replaceState(null,'','#'+name);window.scrollTo(0,0);
+}
+tabs.forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.tab)));
+openTab(location.hash.slice(1)||'home');
+
+/* ---------- helpers ---------- */
+let toastT;
+function toast(msg,err){const t=$('toast');t.textContent=msg;t.className='show'+(err?' err':'');clearTimeout(toastT);toastT=setTimeout(()=>t.className='',2600)}
+const dur=s=>`${s/3600|0}h ${s%3600/60|0}m ${s%60|0}s`;
+const ago=t=>{if(!t)return'wala pa';const s=(Date.now()-t)/1000|0;return s<90?s+'s ago':s<5400?(s/60|0)+'m ago':s<172800?(s/3600|0)+'h ago':(s/86400|0)+'d ago'};
+let netDown=false;
+function setNet(down,since){netDown=down;$('off').style.display=down?'block':'none';$('offt').textContent=down&&since?`Huling status: ${ago(since)}.`:''}
+async function api(p,b){let r;
+ try{r=await fetch('/api/'+p,{method:b?'POST':'GET',headers:{'content-type':'application/json','x-admin':K},body:b?JSON.stringify(b):undefined})}
+ catch{netDown=true;return null}
+ if(r.status==401||r.status==429){const j=await r.json().catch(()=>({}));if(r.status==429){toast(j.error||'Masyadong maraming try',true);return}localStorage.k=K=prompt("Wrong password, try again")||"";return}
+ netDown=false;return r.json()}
+async function post(p,b){const r=await api(p,b||{});if(r&&r.error)toast(r.error,true);else if(r)toast('Tapos na ✓');else if(netDown)toast('Offline ka. Hindi naipadala ang utos.',true);load()}
+const readCache=()=>{try{return JSON.parse(localStorage.lastStatus)}catch{return null}};
+
+/* ---------- settings ---------- */
+function fill(s){const t=s.settings;$('s_speed').value=t.speed;$('s_self').value=t.selfReact?'1':'0';$('s_selfrate').value=t.selfReactRate;
+ $('s_skip').value=t.skipMax;$('s_hour').value=t.hourlyMax;$('s_day').value=t.dailyMax;$('s_read').value=t.markRead?'1':'0';$('s_troll').value=t.troll?'1':'0';
+ $('s_q').value=t.quiet.on?'1':'0';$('s_qs').value=t.quiet.start.padStart(5,'0');$('s_qe').value=t.quiet.end.padStart(5,'0');$('tz').textContent='Timezone: '+t.tz;filled=true}
+function saveSettings(){post('settings',{speed:$('s_speed').value,selfReact:$('s_self').value=='1',selfReactRate:+$('s_selfrate').value,
+ skipMax:+$('s_skip').value,hourlyMax:+$('s_hour').value,dailyMax:+$('s_day').value,markRead:$('s_read').value=='1',troll:$('s_troll').value=='1',
+ quiet:{on:$('s_q').value=='1',start:$('s_qs').value,end:$('s_qe').value}})}
+let gcFilled=false,adminsFilled=false;
+const gcNames=()=>$('gc_names').value.split('\n').map(x=>x.trim()).filter(Boolean);
+function gcStart(){post('gcstart',{names:gcNames(),intervalS:+$('gc_int').value||45})}
+function gcSave(){post('gcsave',{names:gcNames(),intervalS:+$('gc_int').value||45})}
+
+/* ---------- commands cheat sheet ---------- */
+let cmdPrefix=null;
+function renderCmds(p){
+  if(cmdPrefix===p)return;cmdPrefix=p;$('pfx').textContent=p;
+  const G=[
+   ['Music',[[`m Blinding Lights by The Weeknd`,'buong kanta']]],
+   ['Economy',[['balance · daily · work','kita'],['bet <amt> · slot <amt> · cf heads|tails <amt>','laro'],['rob @tao','nakawan (30 min cooldown)'],['deposit / withdraw <amt|all>','bank'],['give @tao <amt> · top','padala at ranking']]],
+   ['Shop',[['shop · item <#>','tingnan'],['buy <#> [dami] · sell <item> · inv','bili, benta, bag']]],
+   ['Moderation (admin ng GC)',[['kick @tao','tanggalin'],['ban @tao [dahilan] · unban <#|@tao> · banlist','ban'],['warn @tao · warns · unwarn @tao [all]','3 warns = kick'],['unsend (i-reply) · mods','burahin ang mensahe ng bot']]],
+   ['Utility',[['ask <tanong> · weather <lugar> · define <word>',''],['calc <math> · time · convert 100 usd php',''],['remind 10m <text> · roll · flip · 8ball · pick a | b','']]],
+   ['🔒 Admin',[['on · off','buksan/patayin ang bot sa GC'],['gcname start|stop|add|set|interval','GC name cycle'],['troll on|off · eco add|remove|reset @tao','']]],
+   ['🔒 Owner',[['setbal @tao <amt> [wallet|bank]','i-set ang balance'],['additem Pangalan | presyo | emoji | desc | max','dagdag item'],['edititem <#> price|name|emoji|desc|max <value>',''],['delitem <#>','tanggal item (50% refund)']]],
+  ];
+  $('cmdlist').innerHTML=G.map(([t,rows])=>`<div><h3>${esc(t)}</h3>${rows.map(([c,d])=>`<code>${esc(p)}${esc(c)}${d?` <span>— ${esc(d)}</span>`:''}</code>`).join('')}</div>`).join('');
+}
+
+/* ---------- status ---------- */
+function setMoon(s){
+  let cls='off',h='Hindi nakakonekta',sub='Offline ang Messenger. Kusang susubukan ulit ng bot.';
+  if(s.authDead){cls='off';h='Patay ang session';sub='Mag-paste ng bagong cookie sa Session tab.'}
+  else if(s.online&&s.running&&!s.quietNow){cls='full';h='Gising at sumasagot';sub=`${s.repliesHour} reply ngayong oras · ${s.repliesDay} ngayong araw`}
+  else if(s.online&&s.running&&s.quietNow){cls='crescent';h='Quiet hours, tahimik muna';sub='Sasagot ulit paglampas ng quiet hours.'}
+  else if(s.online){cls='new';h='Naka-pause ang bot';sub='Online sa Messenger pero hindi sumasagot. Pindutin ang Start.'}
+  $('moon').className='moon '+cls;$('state').textContent=h;$('statesub').textContent=sub;
+}
+async function load(){let s=await api('status'),stale=0;
+ if(!s||s.error){if(!netDown)return;const c=readCache();setNet(true,c&&c.t);if(!c)return;s=c.s;stale=c.t}
+ else{setNet(false);try{localStorage.lastStatus=JSON.stringify({t:Date.now(),s})}catch{}}
+ S=s;if(!filled)fill(s);
+ if(!adminsFilled&&document.activeElement!==$('admins')){$('admins').value=(s.admins||[]).join('\n');adminsFilled=true}
+ $('adminst').textContent=`Naka-save: ${(s.admins||[]).length} admin${s.uid?' · bot account: '+s.uid:''}`;
+ if(s.gc&&!gcFilled){$('gc_names').value=s.gc.names.join('\n');$('gc_int').value=s.gc.intervalS;gcFilled=true}
+ if(s.gc){$('gcon').textContent=s.gc.on?'ON':'OFF';$('gcon').className=s.gc.on?'ok':'bad';
+  $('gcst').textContent=`Changes: ${s.gc.changes||0} · Now: ${s.gc.lastTitle||'—'} · Last: ${ago(s.gc.lastChangeAt)}${s.gc.fails?' · fails: '+s.gc.fails:''}`}
+ $('lib').textContent=(s.fca||'fca not loaded yet')+' · prefix '+s.prefix;renderCmds(s.prefix||'!');
+ $('dead').style.display=s.authDead?'block':'none';
+ $('conn').className='pill'+(s.online?' on':'');$('connt').textContent=s.online?'Online':'Offline';
+ $('on').textContent=s.online?'ONLINE':'OFFLINE';$('on').className='v '+(s.online?'ok':'bad');
+ $('run').textContent=s.running?(s.quietNow?'QUIET':'RUNNING'):'PAUSED';$('run').className='v '+(s.running?(s.quietNow?'warn':'ok'):'bad');
+ $('su').textContent=dur(s.serverUptime);$('bu').textContent=dur(s.botUptime);
+ $('autosw').setAttribute('aria-checked',String(!!s.autoReply));
+ $('st').textContent=`${s.autoReply?'Naka-ON':'Naka-OFF'} · ${s.repliesHour}/oras · ${s.repliesDay}/araw · na-block ng anti-spam: ${s.suppressed}`;
+ $('health').innerHTML=`Cookie na-refresh: <b>${ago(s.stateRefreshedAt)}</b><br>Last health check: <b>${ago(s.lastPing)}</b><br>Last event: <b>${ago(s.lastEventAt)}</b><br>Connected: <b>${ago(s.lastConnected)}</b>`;
+ $('ss').textContent=s.cookieSaved?`Cookie saved (${ago(s.savedAt)}) · ${s.uid||'not connected'}`:'Walang cookie. Mag-paste sa ibaba para makakonekta.';
+ $('err').textContent=s.lastError||'';
+ setMoon(s);
+ if(stale){$('moon').className='moon off';$('state').textContent='Walang koneksyon sa server';$('statesub').textContent='Huling nakita: '+ago(stale)+'. Ito ang huling status na na-save sa device mo.';$('conn').className='pill';$('connt').textContent='Offline';$('on').textContent='OFFLINE';$('on').className='v bad';$('run').textContent='DI ALAM';$('run').className='v warn'}
+ $('log').innerHTML=s.log.length?s.log.map(l=>`<div class="ev ${esc(l.who)}"><time>${new Date(l.t).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</time><div><b>${esc(l.who)}</b> ${esc(l.msg)}</div></div>`).join(''):'<div class="m">Wala pang activity.</div>'}
+
+/* ---------- group chats ---------- */
+async function threads(){const t=await api('threads')||[];const on=new Set((S.threads||[]).map(String));const known=new Set(t.map(x=>String(x.id)));
+ const rows=t.map(x=>[String(x.id),x.name]).concat([...on].filter(i=>!known.has(i)).map(i=>[i,'(GC '+i+')']));
+ $('gclist').innerHTML=rows.length?rows.map(([id,n])=>`<label class="gcrow"><input type="checkbox" data-id="${esc(id)}" ${on.has(id)?'checked':''}><span>${esc(n)}</span></label>`).join(''):'Walang GC na nakita. Connect muna, tapos Refresh list.'}
+$('gclist').addEventListener('change',e=>{const i=e.target;if(i&&i.dataset&&i.dataset.id)post('threadset',{threadId:i.dataset.id,on:i.checked})});
+/* ---------- private message targets ---------- */
+async function dms(){const t=await api('dms')||[];const on=new Set((S.dmThreads||[]).map(String));const known=new Set(t.map(x=>String(x.id)));
+ const rows=t.map(x=>[String(x.id),x.name]).concat([...on].filter(i=>!known.has(i)).map(i=>[i,'(ID '+i+')']));
+ $('dmlist').innerHTML=rows.length?rows.map(([id,n])=>`<label class="gcrow"><input type="checkbox" data-id="${esc(id)}" ${on.has(id)?'checked':''}><span>${esc(n)}</span></label>`).join(''):'Walang PM na nakita. Connect muna, tapos Refresh list.'}
+$('dmlist').addEventListener('change',e=>{const i=e.target;if(i&&i.dataset&&i.dataset.id)post('dmset',{threadId:i.dataset.id,on:i.checked})});
+async function dmAdd(){const v=($('dm_id').value||'').trim();if(!/^\d{5,25}$/.test(v)){toast('Invalid user ID',true);return}await post('dmset',{threadId:v,on:true});$('dm_id').value='';dms()}
+setInterval(load,3000);
+
+/* ---------- group features: Lock GC name + Set ALL nicknames ---------- */
+let GL=[],GACT={},GSEL='';
+const gv=i=>$(i).value.trim();
+function gName(id){const g=GL.find(x=>x.threadID===id);return g?g.name:id}
+function gfUI(){
+  const lock=gv('gft')==='lock';
+  $('gf1').placeholder=lock?'Pangalan ng GC na ila-lock (walang laman = current name)':'Nickname para sa lahat ({i} = bilang: 1, 2, 3…)';
+  $('gfhint').textContent=lock?'Start = i-lock ang pangalan. Babalik ito kapag may nagpalit. Stop = i-unlock.':'Start = lahat ng member ay mapapalitan ng nickname (dahan-dahan, may pagitan). Stop = ihinto ang takbo.';
+  gActive();
+}
+async function gLoad(){
+  const r=await api('groups');
+  if(!r||r.error){$('gflist').textContent=(r&&r.error)?r.error:'Hindi ma-load ang mga GC. Siguraduhing online ang bot.';return}
+  GL=r.groups||[];gRender();gActive();
+}
+function gRender(){
+  const q=gv('gfind').toLowerCase();
+  const rows=GL.filter(g=>!q||(g.name+' '+g.threadID).toLowerCase().includes(q));
+  $('gflist').innerHTML=rows.length?rows.map(g=>{const on=!!GACT[g.threadID];
+   return `<div class="gfrow${GSEL===g.threadID?' picked':''}"><div class="nm" data-pick="${esc(g.threadID)}"><b>${esc(g.name)}</b><span class="m">${g.members?esc(g.members)+' members':esc(g.threadID)}</span></div>`+
+   `<button class="${on?'stop':'go'}" data-go="${esc(g.threadID)}" data-on="${on?1:0}">${on?'Stop':'Start'}</button></div>`}).join(''):'Walang GC na nakita.';
+}
+async function gActive(){
+  const r=await api('group-active?feature='+encodeURIComponent(gv('gft')));
+  if(!r||r.error)return;
+  GACT={};(r.threads||[]).forEach(t=>GACT[t]=1);gRender();
+}
+async function gGo(id,on){
+  const f=gv('gft');
+  if(!on&&f==='nick'){
+    if(!gv('gf1'))return toast('I-type muna ang nickname',true);
+    if(!confirm('Palitan ang nickname ng LAHAT sa "'+gName(id)+'"?'))return;
+  }
+  const r=await api(on?'group/feature-stop':'group/feature-start',{threadID:id,feature:f,text:gv('gf1')});
+  if(r&&r.error)toast(r.error,true);else if(r)toast(on?'Na-stop ✓':'Nagsimula ✓');
+  gActive();
+}
+async function gAct(action,extra){
+  if(!GSEL)return toast('Pindutin muna ang pangalan ng GC',true);
+  const r=await api('group/'+action,Object.assign({threadID:GSEL},extra||{}));
+  if(r&&r.error)toast(r.error,true);
+  else if(r)toast(r.queued!==undefined?('Naka-queue: '+r.queued+' change, tumatakbo sa background'):'Tapos na ✓');
+  gActive();
+}
+$('gflist').addEventListener('click',e=>{
+  const b=e.target.closest('[data-go]');
+  if(b)return gGo(b.dataset.go,b.dataset.on==='1');
+  const p=e.target.closest('[data-pick]');
+  if(p){GSEL=p.dataset.pick;$('gmore').textContent='Napili: '+gName(GSEL);gRender()}
+});
+setInterval(()=>{if(S.online)gActive()},5000);
+
+/* ---------- offline app (PWA) ---------- */
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+let deferredInstall=null;
+const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installcard').hidden=false;$('installbtn').hidden=false});
+addEventListener('appinstalled',()=>{$('installcard').hidden=true;deferredInstall=null});
+function installApp(){if(!deferredInstall)return;deferredInstall.prompt();deferredInstall.userChoice.finally(()=>{deferredInstall=null;$('installcard').hidden=true})}
+if(!isStandalone&&/iphone|ipad|ipod/i.test(navigator.userAgent)){$('installcard').hidden=false;$('installtxt').textContent='Sa Safari: pindutin ang Share, tapos Add to Home Screen. Mabubuksan ito kahit offline at makikita ang huling status.'}
+addEventListener('online',load);addEventListener('offline',load);
+</script>
+</body>
+</html>
